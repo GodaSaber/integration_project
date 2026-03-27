@@ -119,26 +119,19 @@ The graphs will be saved as `results/time_vs_n.png` and `results/speedup.png`.
 
 ```
 .
-├── include/                 # Header files
-│   ├── integrator_serial.h
-│   ├── integrator_omp.h
-│   ├── integrator_cuda.h
-│   ├── rpn_parser.h
-│   └── rpn_eval.h
-├── src/                     # Source files
+Integration_project/
+├── src/
 │   ├── main.cpp
-│   ├── integrator_serial.cpp
-│   ├── integrator_omp.cpp
-│   ├── integrator_cuda.cu
-│   ├── rpn_parser.cpp
-│   └── rpn_eval.cpp
-├── scripts/                 # Automation scripts
-│   ├── run_experiments.sh
-│   └── plot_results.py
-├── results/                 # Output directory (created at runtime)
-│   ├── results.csv
-│   └── *.png
-├── CMakeLists.txt           (optional)
+│   ├── integrator_serial.cpp / integrator_omp.cpp / integrator_serial.h 
+│   ├── integrator_cuda.cu // integrator_omp.h / integrator_cuda.h
+│   ├── rpn_parser.cpp / rpn_eval.cpp/ rpn_parser.h / rpn_eval.h
+├── scripts/
+│   ├── run_experiments.sh 
+│   └── plot_results.py     
+├── results/
+    ├── results.csv/ time_vs_n.png/ speedup.png/ cuda_block_size.png
+├── HPC_Integration_Report.docx
 └── README.md
+
 ```
 

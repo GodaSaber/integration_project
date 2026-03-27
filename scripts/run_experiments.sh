@@ -1,6 +1,8 @@
+
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Configuration
 BIN="./integrate"
 OUT_DIR="results"
 CSV="${OUT_DIR}/results.csv"
@@ -9,6 +11,8 @@ FUNC="x^2"
 A=0
 B=1
 METHOD="riemann"
+
+# Parameter ranges
 THREADS_LIST=(1 2 4 8)
 N_LIST=(1000000 5000000 10000000)
 CUDA_BLOCK_SIZES=(128 256 512)
@@ -16,9 +20,20 @@ CUDA_BLOCK_SIZES=(128 256 512)
 mkdir -p "${OUT_DIR}"
 rm -f "${CSV}"
 
+# CSV header
 echo "function,a,b,n,method,impl,threads,block_size,repeats,result,avg_time,stddev" > "${CSV}"
 
 log() { echo "[$(date +%H:%M:%S)] $*"; }
+
+# Log system info (optional, for reproducibility)
+log "=== System Info ==="
+log "OS: $(uname -srm)"
+log "CPU: $(grep 'model name' /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)"
+log "Cores: $(nproc)"
+log "Compiler: $(g++ --version | head -1)"
+if command -v nvidia-smi &>/dev/null; then
+    log "GPU: $(nvidia-smi --query-gpu=name --format=csv,noheader)"
+fi
 
 log "=== Serial ==="
 for N in "${N_LIST[@]}"; do

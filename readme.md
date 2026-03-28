@@ -58,6 +58,7 @@ cd src
 
 # Compile
 g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cpp -fopenmp -o integrator
+```
 
 ▶️ Run Examples
 ```bash
@@ -66,6 +67,7 @@ g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cp
 
 # Serial (Simpson, x^3)
 ./integrator --impl serial --a 0 --b 1 --n 10000 -f x^3 -m simpson
+```
 
 🚀 Compile with CUDA
 ```bash
@@ -83,11 +85,12 @@ src/rpn_eval.cpp \
 -o integrate \
 -Xcompiler -fopenmp \
 -std=c++17
+```
 
 ⚡ Run CUDA
 ```bash
 ./integrate --impl cuda --a 0 --b 1 --n 10000 -f x^3 -m simpson -k 128
-
+```
 
 🧪 Running Experiments
 ```bash

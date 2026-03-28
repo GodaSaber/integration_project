@@ -93,6 +93,39 @@ nvcc -O3 -std=c++17 -o integrate \
 | `--help` | Show help |
 
 ---
+---
+
+## 🔧 Full Build & Run Commands
+
+### 🧠 Compile (Serial + OpenMP)
+
+```bash
+g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cpp -fopenmp -o integrator
+
+###▶️ Run Examples
+
+# OpenMP (Riemann, x^3)
+./integrator --impl omp --a 0 --b 1 --n 10000000 -f x^3 -m riemann -t 128
+
+# Serial (Simpson, x^3)
+./integrator --impl serial --a 0 --b 1 --n 10000 -f x^3 -m simpson
+
+###🚀 Compile with CUDA
+
+```bash
+nvcc -ccbin g++-11 -arch=sm_86 \
+src/main.cpp \
+src/integrator_serial.cpp \
+src/integrator_omp.cpp \
+src/integrator_cuda.cu \
+src/rpn_parser.cpp \
+src/rpn_eval.cpp \
+-o integrate \
+-Xcompiler -fopenmp \
+-std=c++17
+
+###⚡ Run CUDA
+./integrate --impl cuda --a 0 --b 1 --n 10000 -f x^3 -m simpson -k 128
 
 ## Running Experiments
 

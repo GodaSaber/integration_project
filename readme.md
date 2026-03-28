@@ -50,24 +50,29 @@ The expression is parsed into **Reverse Polish Notation (RPN)**, which is evalua
 
 ## 🔧 Full Build & Run Commands
 
-###🧠 Compile with (Serial + OpenMP)Only 
+### 🧠 Compile (Serial + OpenMP Only)
 
-enter ===> cd src
 ```bash
+# Navigate to source directory
+cd src
+
+# Compile
 g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cpp -fopenmp -o integrator
 
-###▶️ Run Examples
-
+▶️ Run Examples
+```bash
 # OpenMP (Riemann, x^3)
 ./integrator --impl omp --a 0 --b 1 --n 10000000 -f x^3 -m riemann -t 128
 
 # Serial (Simpson, x^3)
 ./integrator --impl serial --a 0 --b 1 --n 10000 -f x^3 -m simpson
 
-### 🚀 Compile with CUDA
+🚀 Compile with CUDA
+```bash
+# Go back to project root
+cd ..
 
-exit (src) ===> cd ..
-``bash
+# Compile with CUDA support
 nvcc -DUSE_CUDA -ccbin g++-11 -arch=sm_86 \
 src/main.cpp \
 src/integrator_serial.cpp \
@@ -79,22 +84,27 @@ src/rpn_eval.cpp \
 -Xcompiler -fopenmp \
 -std=c++17
 
-###⚡ Run CUDA
+⚡ Run CUDA
+```bash
 ./integrate --impl cuda --a 0 --b 1 --n 10000 -f x^3 -m simpson -k 128
 
-## Running Experiments
 
-The experiment script runs all required conditions (varying `n`, threads, and block size) and appends results to `results/results.csv`.
-
+🧪 Running Experiments
 ```bash
+The experiment script runs all required configurations and saves results to results/results.csv.
+
 chmod +x scripts/run_experiments.sh
 ./scripts/run_experiments.sh
 ```
 
 After the experiments, generate the plots:
 
+📊 Generate Plots
 ```bash
+# Fix line endings (if needed)
 sed -i 's/\r$//' scripts/plot_results.py
+
+# Generate graphs
 python3 scripts/plot_results.py
 ```
 

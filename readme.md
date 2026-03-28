@@ -97,7 +97,7 @@ nvcc -O3 -std=c++17 -o integrate \
 
 ## 🔧 Full Build & Run Commands
 
-### 🧠 Compile (Serial + OpenMP)
+###🧠 Compile with (Serial + OpenMP)Only 
 
 ```bash
 g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cpp -fopenmp -o integrator

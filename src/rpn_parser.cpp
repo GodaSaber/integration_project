@@ -1,8 +1,9 @@
 #include "rpn_parser.h"
 #include <stack>
-#include <map>
 #include <cctype>
 #include <cmath>
+#include <stdexcept>
+#include <iostream>
 
 static int precedence(char op) {
     if (op == '+' || op == '-') return 1;
@@ -22,12 +23,14 @@ static void skip_spaces(const std::string& s, size_t& i) {
 static double parse_number(const std::string& s, size_t& i) {
     size_t start = i;
     while (i < s.size() && (std::isdigit(s[i]) || s[i] == '.')) ++i;
+    if (start == i) throw std::runtime_error("Invalid number");
     return std::stod(s.substr(start, i - start));
 }
 
 static std::string parse_identifier(const std::string& s, size_t& i) {
     size_t start = i;
     while (i < s.size() && (std::isalpha(s[i]) || std::isdigit(s[i]))) ++i;
+    if (start == i) throw std::runtime_error("Empty identifier");
     return s.substr(start, i - start);
 }
 
@@ -42,19 +45,16 @@ CompiledRPN compile_expression(const std::string& expr) {
 
         char c = expr[i];
         if (std::isdigit(c) || c == '.') {
-            // رقم
             double num = parse_number(expr, i);
             output.push_back({TokenType::NUM, num});
             continue;
         }
         else if (c == 'x' || c == 'X') {
-            // متغير x
             output.push_back({TokenType::VAR, 0.0});
             ++i;
             continue;
         }
         else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
-            // عامل ثنائي
             while (!ops.empty() && ops.top() != '(' &&
                    ((precedence(ops.top()) > precedence(c)) ||
                     (precedence(ops.top()) == precedence(c) && !right_associative(c)))) {
@@ -73,7 +73,8 @@ CompiledRPN compile_expression(const std::string& expr) {
                 output.push_back({static_cast<TokenType>(ops.top()), 0.0});
                 ops.pop();
             }
-            if (!ops.empty() && ops.top() == '(') ops.pop();
+            if (ops.empty()) throw std::runtime_error("Mismatched parentheses: extra ')'");
+            if (ops.top() == '(') ops.pop();
             ++i;
         }
         else if (std::isalpha(c)) {
@@ -85,16 +86,17 @@ CompiledRPN compile_expression(const std::string& expr) {
             else if (name == "exp") tt = TokenType::EXP;
             else if (name == "log") tt = TokenType::LOG;
             else {
-                continue;
+                throw std::runtime_error("Unknown function: " + name);
             }
-            ops.push(static_cast<char>(tt));  
+            ops.push(static_cast<char>(tt));
         }
         else {
-            ++i;
+            throw std::runtime_error(std::string("Unexpected character: ") + c);
         }
     }
 
     while (!ops.empty()) {
+        if (ops.top() == '(') throw std::runtime_error("Mismatched parentheses: missing ')'");
         output.push_back({static_cast<TokenType>(ops.top()), 0.0});
         ops.pop();
     }

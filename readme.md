@@ -93,9 +93,9 @@ src/rpn_eval.cpp \
 ```
 
 🧪 Running Experiments
-```bash
-The experiment script runs all required configurations and saves results to results/results.csv.
 
+The experiment script runs all required configurations and saves results to results/results.csv.
+```bash
 chmod +x scripts/run_experiments.sh
 ./scripts/run_experiments.sh
 ```

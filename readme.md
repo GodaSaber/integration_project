@@ -30,53 +30,6 @@ The expression is parsed into **Reverse Polish Notation (RPN)**, which is evalua
 - **CUDA Toolkit** (optional, only if you want to compile the CUDA code)
 - **Python 3** with `matplotlib` (for plotting)
 
----
-
-## Build Instructions
-
-Clone the repository and navigate to the root folder.
-
-### Without CUDA (Serial + OpenMP only)
-
-```bash
-g++ -O3 -fopenmp -std=c++17 -o integrate \
-    -Iinclude \
-    src/main.cpp \
-    src/integrator_serial.cpp \
-    src/integrator_omp.cpp \
-    src/rpn_parser.cpp \
-    src/rpn_eval.cpp
-```
-
-### With CUDA (requires CUDA Toolkit)
-
-```bash
-nvcc -O3 -std=c++17 -o integrate \
-    -Iinclude \
-    src/main.cpp \
-    src/integrator_serial.cpp \
-    src/integrator_omp.cpp \
-    src/integrator_cuda.cu \
-    src/rpn_parser.cpp \
-    src/rpn_eval.cpp \
-    -Xcompiler -fopenmp
-```
-
----
-
-## Usage Examples
-
-```bash
-# Serial, Riemann, x² from 0 to 1, 10⁷ intervals
-./integrate --function "x^2" --a 0 --b 1 --n 10000000 --impl serial
-
-# OpenMP with 4 threads, Simpson, sin(x) from 0 to π
-./integrate --function "sin(x)" --a 0 --b 3.1415926535 --n 10000000 --impl omp --threads 4 --method simpson
-
-# CUDA with block size 256 (if compiled)
-./integrate --function "exp(x)" --a 0 --b 1 --n 10000000 --impl cuda --block-size 256
-```
-
 ### Command‑line Options
 
 | Flag | Description |
@@ -99,6 +52,7 @@ nvcc -O3 -std=c++17 -o integrate \
 
 ###🧠 Compile with (Serial + OpenMP)Only 
 
+enter ===> cd src
 ```bash
 g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cpp -fopenmp -o integrator
 
@@ -110,10 +64,11 @@ g++ main.cpp integrator_serial.cpp integrator_omp.cpp rpn_parser.cpp rpn_eval.cp
 # Serial (Simpson, x^3)
 ./integrator --impl serial --a 0 --b 1 --n 10000 -f x^3 -m simpson
 
-###🚀 Compile with CUDA
+### 🚀 Compile with CUDA
 
-```bash
-nvcc -ccbin g++-11 -arch=sm_86 \
+exit (src) ===> cd ..
+``bash
+nvcc -DUSE_CUDA -ccbin g++-11 -arch=sm_86 \
 src/main.cpp \
 src/integrator_serial.cpp \
 src/integrator_omp.cpp \
@@ -139,6 +94,7 @@ chmod +x scripts/run_experiments.sh
 After the experiments, generate the plots:
 
 ```bash
+sed -i 's/\r$//' scripts/plot_results.py
 python3 scripts/plot_results.py
 ```
 
